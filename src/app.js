@@ -5,8 +5,29 @@ const hotels = [
     { hotel: 'Ridgewood', stars: 5, price: 220, vipPrice: 100, wePrice: 150, weVipPrice: 40 }
 ]
 
-function bestHotel(premium, array) {
+submit.addEventListener("click", getInput);
+
+//obtiene el input y devuelve el output.
+function getInput() {
+    let start = new Date(from.value);
+    let end = new Date(to.value);
+    let premium = vip.checked;
+    let winner = (bestHotel(start, end, premium));
+    result.innerHTML = `El hotel conveniente es el ${winner[1]}, que cuesta $${winner[0]}`
+}
+
+//devuelve el menor precio y el tipo de hotel correspondiente. Ej: ["240", "Bridgewood"]
+function bestHotel(start, end, premium) {
+    let prices = hotelCompare(start, end, premium)
+    let bestPrice = Math.min(...prices)
+    let i = prices.indexOf(bestPrice)
+    return [bestPrice, hotels[i].hotel]
+}
+
+//devuelve arreglo con costo total de estadía segun tipo de hotel. Ej: ["320", "240", "550"]
+function hotelCompare(start, end, premium) {
     let compareArray = [];
+    let array = dayType(start, end);
     for (let i = 0; i < hotels.length; i++) {
         let cost = 0;
         for (let j = 0; j < array.length; j++) {
@@ -26,30 +47,10 @@ function bestHotel(premium, array) {
         }
         compareArray.push(cost)
     }
-    console.log(compareArray)
+    return compareArray;
 }
 
-
-
-submit.addEventListener("click", getInput);
-
-function getInput() {
-    let start = new Date(from.value);
-    let end = new Date(to.value);
-    let premium = vip.checked;
-    console.log(start, end, premium);
-    dayType(start, end)
-}
-
-function dayArray(start, end) {
-    let array = [];
-    while (start <= end) {
-        array.push((String(new Date(start))).substring(0, 3));
-        start.setDate(start.getDate() + 1);
-    }
-    return array;
-}
-
+// devuelve arreglo clasificando si los días de estadía son de semana o fin de semana. Ej: ["week", "wknd", "wknd"]
 function dayType(start, end) {
     array = dayArray(start, end);
     dayTypeArray = [];
@@ -60,8 +61,20 @@ function dayType(start, end) {
             dayTypeArray.push("week")
         }
     }
-    console.log(dayTypeArray)
+    return dayTypeArray;
 }
+
+// devuelve arreglo con los días de estadía según día de la semana Ej: ["Fri", "Sat", "Sun"]
+function dayArray(start, end) {
+    let array = [];
+    while (start <= end) {
+        array.push((String(new Date(start))).substring(0, 3));
+        start.setDate(start.getDate() + 1);
+    }
+    return array;
+}
+
+
 
 
 
